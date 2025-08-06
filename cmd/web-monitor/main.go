@@ -5,48 +5,60 @@ import (
 )
 
 const (
-	INIT string  = "1- Start monitoring"
-	LOGS string  = "2- Exibit the logs"
-	EXIT string  = "3- Exit the program"
-	MSG  string  = "Hello, sr. Please enter your name:"
-	ERROR string = "Invalid option, please try again."
-	NAME string  = "Name: "
+	START        = "1- Start Monitoring"
+	SHOW         = "2- Show Logs"
+	EXIT         = "3- Exit Program"
+	TO_CONTINUED = "To continued..."
+)
+
+var (
+	input string
 )
 
 func main() {
 	var name string
-	var version string = "1.0.0"
+	version := "1.0.0"
 
 	fmt.Println("Hello, sr. Please enter your name:")
 	fmt.Print("Name: ")
-	fmt.Scan(&name)
+	_, err := fmt.Scan(&name)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	fmt.Println("Hello, sr.", name)
 	fmt.Println("The program is in version", version)
 
 	menu()
+	selectMenu()
+	managementSelection()
 }
 
 func menu() {
-	fmt.Println(INIT)
-	fmt.Println(LOGS)
+	fmt.Println(START)
+	fmt.Println(SHOW)
 	fmt.Println(EXIT)
+}
 
-	var option int
-	fmt.Print("Plaese, select an option: ")
-	fmt.Scan(&option)
+func selectMenu() {
 
-	switch option {
-	case 1:
-		fmt.Println("Starting monitoring...")
-	case 2:
-		fmt.Println("Displaying logs...")
-		menu() // Call menu again to allow further actions
-	case 3:
-		fmt.Println("Exiting the program...")
-		return // Exit the program
+	fmt.Println("Selecione um comando:")
+	_, err := fmt.Scan(&input)
+	if err != nil {
+		err.Error()
+	}
+	fmt.Println("O comando escolhido foi", input)
+}
+
+func managementSelection() {
+	switch input {
+	case "1":
+		fmt.Println(START)
+	case "2":
+		fmt.Println(SHOW)
+	case "3":
+		fmt.Println(EXIT)
 	default:
-		fmt.Println("Invalid option, please try again.")
-		menu() // Call menu again for a valid option
+		fmt.Println(TO_CONTINUED)
 	}
 }
