@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"net/http"
 )
 
 const (
 	START        = "1- Start Monitoring"
 	SHOW         = "2- Show Logs"
-	EXIT         = "3- Exit Program"
-	TO_CONTINUED = "To continued..."
+	EXIT         = "0- Exit Program"
+	MISTAKE = "Inespected command..."
 )
 
 var (
@@ -41,11 +43,10 @@ func menu() {
 }
 
 func selectMenu() {
-
 	fmt.Println("Selecione um comando:")
 	_, err := fmt.Scan(&input)
 	if err != nil {
-		err.Error()
+		fmt.Println(err)
 	}
 	fmt.Println("O comando escolhido foi", input)
 }
@@ -53,12 +54,39 @@ func selectMenu() {
 func managementSelection() {
 	switch input {
 	case "1":
-		fmt.Println(START)
+		Monitoring()
 	case "2":
-		fmt.Println(SHOW)
-	case "3":
-		fmt.Println(EXIT)
+		DisplayLogs()
+	case "0":
+		ExitProgram()
 	default:
-		fmt.Println(TO_CONTINUED)
+		fmt.Println(MISTAKE)
+		os.Exit(-1)
 	}
+}
+
+func Monitoring() {
+	fmt.Println("Monitoring...")
+	resp, err := http.Get("https://google.com")
+	if err != nil {
+		fmt.Println("Error fetching URL:", err)
+		return
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println("Error: Received non-OK response status:", resp.Status)
+		return
+	} else {
+		fmt.Println("Successfully connected to the URL.", "Status code:", resp.StatusCode)
+	}
+	defer resp.Body.Close()
+}
+
+func DisplayLogs() {
+	fmt.Println("Displaying logs...")
+}
+
+func ExitProgram() {
+	fmt.Println("Exiting program...")
+	os.Exit(0)
 }
